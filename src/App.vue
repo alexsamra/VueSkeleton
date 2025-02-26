@@ -1,29 +1,37 @@
 <script setup>
 import { ref } from 'vue';
-
-const msg = 'Todo App';
-const itemList = ref([]);
-const itemButton = ref(false);
+import { watch } from 'vue';
 
 const name = ref('');
 const date = ref(new Date().toISOString().substring(0, 10));
 const done = ref(false);
+const msg = 'Todo App';
+const itemButton = ref(false);
 
-const formatDate = (date) => {
-  return new Date(date).toDateString();
-};
-
-function item(name, date, done){
+class item {
+  constructor(name, date, done) {
   this.name = name;
   this.date = date;
-  this.done = done;
+  this.done = false;
+  }
 }
 
-function addItem(name, date, done){
-  let newItem = new item(name, date, done);
+const itemList = ref(
+  JSON.parse(localStorage.getItem('itemList'))?.map(item => ({
+    name: item.name,
+    date: item.date,
+    done: item.done
+  })) || []
+);
+
+function addItem(name, date){
+  let newItem = new item(name, new Date(date).toISOString().substring(0, 10), false);
   itemList.value.push(newItem);
 }
 
+watch(itemList, (newList) => {
+  localStorage.setItem('itemList', JSON.stringify(newList));
+}, { deep: true });
 </script>
 
 <template>
@@ -56,7 +64,7 @@ function addItem(name, date, done){
     
     <label for="myCheckbox" 
       :style="{ border: `2px solid ${item.done ? 'green' : 'red'}` }">
-      {{ item.name }} - {{ formatDate(date) }}
+      {{ item.name }} - {{ item.date }}
       <button @click="itemList.splice(index,1)">Delete</button>
     </label>
   </h4>
