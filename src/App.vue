@@ -35,39 +35,68 @@ watch(itemList, (newList) => {
 </script>
 
 <template>
-  <h1 style="text-align: center;">
+  <h1>
     {{ msg }}
   </h1>
-  <h2>
-    <div style="text-align: center;">
-      <button @click="itemButton=true; console.log({itemButton})">Add Item</button>
-    </div>
-  </h2>
-  <h3>
-    <div style="text-align: center;">
-      <section v-if="itemButton">
-        <label for="userInput">Enter name:</label>
-        <input type="text" v-model="name" id="name" />
-        <br>
-        <br>
-        <label for="userInput">Enter date:</label>
-        <input type="date" v-model="date" id="date" />
-        <br>
-        <br>
-        <button @click="addItem(name, date, false); itemButton=false; console.log({itemButton})">Add</button>
-      </section>
-    </div>
-  </h3>
+  <p>
+    <button @click="itemButton=true; console.log({itemButton})" class="add_button">Add Item</button>
+    <section v-if="itemButton">
+      <label for="userInput">Enter name:</label>
+      <input type="text" v-model="name" id="name" />
+      <label for="userInput">Enter date:</label>
+      <input type="date" v-model="date" id="date" />
+      <button @click="addItem(name, date, false); itemButton=false; console.log({itemButton})" class="add_buttons">Add</button>
+      <button @click="itemButton=false" class="add_buttons">Cancel</button>
+    </section>
+  </p>
 
-  <h4 v-for="(item, index) in itemList" :key="index">>
-    <input type="checkbox" id="myCheckbox" v-model="item.done">
-    
-    <label for="myCheckbox" 
-      :style="{ border: `2px solid ${item.done ? 'green' : 'red'}` }">
-      {{ item.name }} - {{ item.date }}
-      <button @click="itemList.splice(index,1)">Delete</button>
+  <li v-for="(item, index) in itemList" :key="index">>
+    <input type="checkbox" class="myCheckbox" v-model="item.done">
+    <label for="myCheckbox" class="status-text">
+      <em>{{ item.name }}</em>  {{ item.date }}
+      <button @click="itemList.splice(index,1)" class="delete_button">Delete</button>
     </label>
-  </h4>
+  </li>
 
 </template>
 
+<style>
+em{
+  font-weight: bold;
+  font-style: normal;
+}
+
+.status-text {
+  color: red;
+}
+
+input[type="checkbox"]:checked + .status-text {
+  color: green;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+input[type="text"] {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+input[type="date"] {
+  margin-left: 5px;
+}
+
+.add_button {
+  width: 100px;
+  height: 30px;
+  border-radius: 10px;
+  border-color: white;
+  margin-bottom: 10px;
+}
+
+.add_buttons {
+  margin-left: 5px;
+}
+
+</style>
